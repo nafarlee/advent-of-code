@@ -12,16 +12,20 @@
   (only-in :std/pregexp
            pregexp-split))
 
-(def (split-line line)
+(def (split-line (line : :string))
+  => :list
   (pregexp-split "[[:space:]]+" line))
 
-(def (distance x y)
+(def (distance (x : :number) (y : :number))
+  => :number
   (abs (- x y)))
 
-(def (strings->sorted-numbers ss)
+(def (strings->sorted-numbers (ss : :list))
+  => :list
   (sort (map string->number ss) <))
 
-(def (sum xs)
+(def (sum (xs : :list))
+  => :number
   (fold + 0 xs))
 
 (def (main . args)
