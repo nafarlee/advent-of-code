@@ -15,5 +15,5 @@ fn main() {
     lefts.sort();
     rights.sort();
     let sum: i32 = zip(lefts, rights).map(|(l, r)| (l - r).abs()).sum();
-    println!("{}", sum);
+    println!("{sum}");
 }
