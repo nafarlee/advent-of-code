@@ -1,10 +1,10 @@
-use std::env;
-use std::fs;
+use std::env::args;
+use std::fs::read_to_string;
 use std::iter::zip;
 
 fn main() {
-    let filename = env::args().nth(1).unwrap();
-    let contents = fs::read_to_string(filename).unwrap();
+    let filename = args().nth(1).unwrap();
+    let contents = read_to_string(filename).unwrap();
     let (mut lefts, mut rights): (Vec<i32>, Vec<i32>) = contents
         .lines()
         .map(|line| -> (i32, i32) {
