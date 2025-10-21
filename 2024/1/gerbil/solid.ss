@@ -5,7 +5,6 @@
   (only-in :std/misc/ports
            read-file-lines)
   (only-in :std/srfi/1
-           fold
            unzip2)
   (only-in :std/sort
            sort)
@@ -26,7 +25,7 @@
 
 (def (sum (xs : :list))
   => :number
-  (fold + 0 xs))
+  (foldl + 0 xs))
 
 (def (main . args)
   (def filename (car args))
