@@ -8,10 +8,10 @@
           regexp-match-submatch
           regexp-fold))
 
-(def (parse-match m n)
+(def (parse-match m (n : :integer))
   (string->number (regexp-match-submatch m n)))
 
-(def (fold-proc _i match _s acc)
+(def (fold-proc _i match _s (acc : :number))
   (+ acc
      (* (parse-match match 1)
         (parse-match match 2))))
