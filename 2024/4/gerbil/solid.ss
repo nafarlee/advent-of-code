@@ -5,14 +5,17 @@
  (only-in :std/misc/ports
           read-file-lines))
 
-(def (dim (m : :list))
-  (values (length m)
-          (string-length (car m))))
+(def (dim (m : :list)) => :pair
+  (cons (length m)
+        (string-length (car m))))
 
-(def (at (m : :list) (x : :integer) (y : :integer)) => :string
-  (string-ref (list-ref m y) x))
+(def (at (m : :list) (p : :pair)) => :string
+  (with ([x . y] p)
+    (string-ref (list-ref m y) x)))
 
 (def (main . args)
   (def filename (car args))
   (def input (read-file-lines filename))
   (pp input)
+  (pp (dim input))
+  (pp (at input (cons 0 0))))
