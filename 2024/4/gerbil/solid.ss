@@ -51,11 +51,17 @@
              (1 . 0)
              (1 . 1)))))
 
-(def (main . args)
-  (def filename (car args))
-  (def matrix (read-file-lines filename))
-  (with ([r . c] (dim matrix))
+(def (part-one input)
+  (with ([r . c] (dim input))
     (let (sum 0)
       (for* ((x (in-range r)) (y (in-range c)))
-        (set! sum (+ sum (count-xmas matrix (cons x y)))))
-      (pp sum))))
+        (set! sum (+ sum (count-xmas input (cons x y)))))
+      sum)))
+
+(def (main . args)
+  (pp
+   (match args
+      (["part-one" file-path]
+       (part-one (read-file-lines file-path)))
+      (else
+       (error "part-one {{file-path}}")))))
