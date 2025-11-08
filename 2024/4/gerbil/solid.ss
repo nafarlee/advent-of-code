@@ -39,15 +39,17 @@
    (eq? #\S (at m (add p (mult v 3))))))
 
 (def (count-xmas (m : :list) (p : :pair)) => :integer
-  (count (cut is-xmas? m p <>)
-         '((-1 . -1)
-           (-1 . 0)
-           (-1 . 1)
-           (0 . -1)
-           (0 . 1)
-           (1 . -1)
-           (1 . 0)
-           (1 . 1))))
+  (if (not (eq? #\X (at m p)))
+    0
+    (count (cut is-xmas? m p <>)
+           '((-1 . -1)
+             (-1 . 0)
+             (-1 . 1)
+             (0 . -1)
+             (0 . 1)
+             (1 . -1)
+             (1 . 0)
+             (1 . 1)))))
 
 (def (main . args)
   (def filename (car args))
