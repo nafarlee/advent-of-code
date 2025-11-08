@@ -51,17 +51,40 @@
              (1 . 0)
              (1 . 1)))))
 
-(def (part-one input)
+(def (unit-diagonals (unit-v : :pair))
+  (match unit-v
+    ([0 . vy]
+     [(cons 1 vy) (cons -1 vy)])
+    ([vx . 0]
+     [(cons vx 1) (cons vx -1)])
+    (else (error "Must be called with a cardinal unit vector"))))
+
+(def (is-x-mas? (m : :list) (p : :pair) (v : :pair))
+  (with ([first-m-unit second-m-unit] (unit-diagonals v))
+    (and
+     (eq? #\A (at m p))
+     (eq? #\M (at m (add p first-m-unit)))
+     (eq? #\S (at m (add p (mult first-m-unit -1))))
+     (eq? #\M (at m (add p second-m-unit)))
+     (eq? #\S (at m (add p (mult second-m-unit -1)))))))
+
+(def (count-x-mas (m : :list) (p : :pair)) => :integer
+  (if (not (eq? #\A (at m p)))
+    0
+    (count (cut is-x-mas? m p <>)
+           '((0 . -1)
+             (1 . 0)
+             (0 . 1)
+             (-1 . 0)))))
+
+(def (main . args)
+  (def proc (case (first args)
+              (("part-one") count-xmas) 
+              (("part-two") count-x-mas)
+              (else (error "(part-one|part-two) {{file-path}}"))))
+  (def input (read-file-lines (second args)))
   (with ([r . c] (dim input))
     (let (sum 0)
       (for* ((x (in-range r)) (y (in-range c)))
-        (set! sum (+ sum (count-xmas input (cons x y)))))
-      sum)))
-
-(def (main . args)
-  (pp
-   (match args
-      (["part-one" file-path]
-       (part-one (read-file-lines file-path)))
-      (else
-       (error "part-one {{file-path}}")))))
+        (set! sum (+ sum (proc input (cons x y)))))
+      (pp sum))))
