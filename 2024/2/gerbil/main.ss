@@ -13,14 +13,16 @@
 (def (mildly-decreasing? (x : :number) (y : :number)) => :boolean
   (< (- x 4) y x))
 
-(def (safe? (line : :string)) => :boolean
-  (let* ((strings (string-split line #\space))
-         (numbers (map string->number strings))
-         (offset-numbers (cdr numbers)))
+(def (safe? (numbers : :list)) => :boolean
+  (let* ((offset-numbers (cdr numbers)))
     (or (every mildly-increasing? numbers offset-numbers)
         (every mildly-decreasing? numbers offset-numbers))))
-         
+
+(def (parse-line (line : :string)) => :list
+  (map string->number (string-split line #\space)))
+
 (def (main . args)
   (def filename (car args))
   (def lines (read-file-lines filename))
-  (displayln (count safe? lines)))
+  (def records (map parse-line lines))
+  (displayln (count safe? records)))
