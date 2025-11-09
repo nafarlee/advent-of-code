@@ -22,7 +22,10 @@
   (map string->number (string-split line #\space)))
 
 (def (main . args)
-  (def filename (car args))
+  (def predicate (case (first args)
+                   (("part-one") safe?)
+                   (else (error "Invalid invocation"))))
+  (def filename (second args))
   (def lines (read-file-lines filename))
   (def records (map parse-line lines))
-  (displayln (count safe? records)))
+  (displayln (count predicate records)))
