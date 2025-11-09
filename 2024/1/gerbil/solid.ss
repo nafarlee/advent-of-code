@@ -27,11 +27,17 @@
   => :number
   (foldl + 0 xs))
 
+(def (part-one (lefts : :list) (rights : :list))
+  (sum (map distance
+            (strings->sorted-numbers lefts)
+            (strings->sorted-numbers rights))))
+
 (def (main . args)
-  (def filename (car args))
+  (def filename (second args))
+  (def proc (case (first args)
+              (("part-one") part-one)
+              (else (error "Invalid invocation"))))
   (def lines (read-file-lines filename))
   (def columns (map split-line lines))
   (let*-values (((lefts rights) (unzip2 columns)))
-    (displayln (sum (map distance
-                         (strings->sorted-numbers lefts)
-                         (strings->sorted-numbers rights))))))
+    (displayln (proc lefts rights))))
