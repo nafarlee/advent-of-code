@@ -32,10 +32,25 @@
             (strings->sorted-numbers lefts)
             (strings->sorted-numbers rights))))
 
+(def (frequencies (xs : :list))
+  (let ((ht (hash)))
+    (for-each (cut hash-update! ht <> 1+ 0) xs)
+    ht))
+
+(def (part-two (lefts : :list) (rights : :list))
+  => :integer
+  (def freqs (frequencies rights))
+  (sum
+   (map (lambda (n)
+          (* (string->number n)
+             (hash-ref freqs n 0)))
+        lefts)))
+
 (def (main . args)
   (def filename (second args))
   (def proc (case (first args)
               (("part-one") part-one)
+              (("part-two") part-two)
               (else (error "Invalid invocation"))))
   (def lines (read-file-lines filename))
   (def columns (map split-line lines))
