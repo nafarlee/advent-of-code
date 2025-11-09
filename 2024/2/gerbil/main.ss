@@ -21,9 +21,13 @@
 (def (parse-line (line : :string)) => :list
   (map string->number (string-split line #\space)))
 
+(def (safe-with-dampener? (numbers : :list)) => :boolean
+  #f)
+
 (def (main . args)
   (def predicate (case (first args)
                    (("part-one") safe?)
+                   (("part-two") safe-with-dampener?)
                    (else (error "Invalid invocation"))))
   (def filename (second args))
   (def lines (read-file-lines filename))
