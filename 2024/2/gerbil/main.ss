@@ -3,6 +3,8 @@
 
 (import
  (only-in :std/srfi/1
+          find
+          split-at
           count)
  (only-in :std/misc/ports
           read-file-lines))
@@ -21,8 +23,14 @@
 (def (parse-line (line : :string)) => :list
   (map string->number (string-split line #\space)))
 
+(def (remove-at (ls : :list) (i : :integer)) => :list
+  (with ((values left right) (split-at ls i))
+    (append left (cdr right))))
+
 (def (safe-with-dampener? (numbers : :list)) => :boolean
-  #f)
+  (find (lambda (i)
+          (safe? (remove-at numbers i)))
+        (iota (length numbers))))
 
 (def (main . args)
   (def predicate (case (first args)
