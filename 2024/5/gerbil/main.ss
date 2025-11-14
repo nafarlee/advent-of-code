@@ -53,14 +53,12 @@
                   relevant-rules))))))
 
 (def (main . args)
-  (def filepath (first args))
+  (def filepath (second args))
   (def lines (read-file-lines filepath))
   (def rules (map (cut apply cons <>) (parse-lines #\| lines)))
   (def updates (parse-lines #\, lines))
-  (pp (foldl
-       (lambda (update sum)
-          (if (valid-update? rules update)
-              (+ sum (middle update))
-              sum))
-       0
-       updates)))
+  (with ((values valid-updates invalid-updates)
+         (partition (cut valid-update? rules <>) updates))
+    (pp (case (first args)
+          (("part-one") (foldl + 0 (map middle valid-updates)))
+          (else (error "Invalid invocation"))))))
