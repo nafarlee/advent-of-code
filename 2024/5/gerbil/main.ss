@@ -49,7 +49,7 @@
                         (set-adjoin acc (car r))
                         acc))
                   forbidden
-                  rules)
+                  relevant-rules)
            (cdr rest))))))
 
 (def (main . args)
