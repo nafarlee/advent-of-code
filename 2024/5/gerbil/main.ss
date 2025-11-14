@@ -36,21 +36,21 @@
 
 (def (valid-update? (rules : :list) (update : :list)) => :boolean
   (def relevant-rules (filter-relevant-rules rules update))
-  (let lp ((forbidden (set (make-default-comparator)))
-           (rest update))
+  (let lp ((rest update)
+           (forbidden (set (make-default-comparator))))
     (cond
       ((null? rest)
        #t)
       ((set-contains? forbidden (car rest))
        #f)
       (else
-       (lp (foldl (lambda (r acc)
+       (lp (cdr rest)
+           (foldl (lambda (r acc)
                     (if (= (car rest) (cdr r))
                         (set-adjoin acc (car r))
                         acc))
                   forbidden
-                  relevant-rules)
-           (cdr rest))))))
+                  relevant-rules))))))
 
 (def (main . args)
   (def filepath (first args))
