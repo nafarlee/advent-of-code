@@ -3,6 +3,8 @@
 
 (import
  (only-in :std/srfi/113
+          set
+          set-adjoin
           set-contains?
           list->set)
  (only-in :std/srfi/128
@@ -22,13 +24,6 @@
          #f))
    lines))
 
-(def (invalid-position? (rules : :list) (preceding : :list) (n : :integer)) => :boolean
-  (ormap
-   (lambda (rule)
-     (and (= n (cdr rule))
-          (not (memf (cut = <> (car rule)) preceding))))
-   rules))
-
 (def (filter-relevant-rules (rules : :list) (update : :list)) => :list
   (def relevant-numbers (list->set (make-default-comparator) update))
   (filter (lambda (r)
@@ -41,15 +36,20 @@
 
 (def (valid-update? (rules : :list) (update : :list)) => :boolean
   (def relevant-rules (filter-relevant-rules rules update))
-  (let lp ((seen [])
+  (let lp ((forbidden (set (make-default-comparator)))
            (rest update))
     (cond
       ((null? rest)
        #t)
-      ((invalid-position? relevant-rules seen (car rest))
+      ((set-contains? forbidden (car rest))
        #f)
       (else
-       (lp (cons (car rest) seen)
+       (lp (foldl (lambda (r acc)
+                    (if (= (car rest) (cdr r))
+                        (set-adjoin acc (car r))
+                        acc))
+                  forbidden
+                  rules)
            (cdr rest))))))
 
 (def (main . args)
