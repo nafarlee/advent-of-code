@@ -2,13 +2,6 @@
 ; Gerbil 7a453ba4 on Gambit v4.9.7-6-g64f4d369
 
 (import
- (only-in :std/srfi/113
-          set
-          set-adjoin
-          set-contains?
-          list->set)
- (only-in :std/srfi/128
-          make-default-comparator)
  (only-in :std/sugar
           chain)
  (only-in :std/misc/ports
@@ -25,10 +18,9 @@
    lines))
 
 (def (filter-relevant-rules (rules : :list) (update : :list)) => :list
-  (def relevant-numbers (list->set (make-default-comparator) update))
   (filter (lambda (r)
-            (and (set-contains? relevant-numbers (car r))
-                 (set-contains? relevant-numbers (cdr r))))
+            (and (member (car r) update)
+                 (member (cdr r) update)))
           rules))
 
 (def (middle (xs : :list))
@@ -37,17 +29,17 @@
 (def (valid-update? (rules : :list) (update : :list)) => :boolean
   (def relevant-rules (filter-relevant-rules rules update))
   (let lp ((rest update)
-           (forbidden (set (make-default-comparator))))
+           (forbidden []))
     (cond
       ((null? rest)
        #t)
-      ((set-contains? forbidden (car rest))
+      ((member (car rest) forbidden)
        #f)
       (else
        (lp (cdr rest)
            (foldl (lambda (r acc)
                     (if (= (car rest) (cdr r))
-                        (set-adjoin acc (car r))
+                        (cons (car r) acc)
                         acc))
                   forbidden
                   relevant-rules))))))
