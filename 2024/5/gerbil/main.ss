@@ -67,10 +67,10 @@
            (available update))
     (if (null? available)
       queue
-      (match (find-options relevant-rules queue available)
-        ([x] (lp (cons x queue) (remove1 x available)))
-        ([x y] (or (lp (cons x queue) (remove1 x available))
-                   (lp (cons y queue) (remove1 y available))))))))
+      (ormap (lambda (opt)
+               (lp (cons opt queue)
+                   (remove1 opt available)))
+             (find-options relevant-rules queue available)))))
 
 (def (main . args)
   (def filepath (second args))
